@@ -11,18 +11,19 @@
 # SYSTEM MODULES
 #######################################################################################################################
 
-#import re
-import pandas as pd
-#import numpy as np
+import re
 import inspect
+import os
 import time
-#import fastparquet
+
 from datetime import datetime
 
 # f_get_latest_file:
 #from os import listdir
 #from os.path import isfile, join
 
+import pandas as pd
+import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -31,10 +32,60 @@ import matplotlib.pyplot as plt
 # PARAMETERS
 #######################################################################################################################
 
+# Path to code folder of this project.
+C_PATH_CODE = os.getcwd()
+
+#print(C_PATH_CODE)
+
+# Paths to project root folder and sub-folders.
+C_PATH_PROJECT_ROOT = re.sub("Code", "", C_PATH_CODE)
+C_PATH_DATA         = C_PATH_PROJECT_ROOT + "Data/"
+C_PATH_DELIVERABLES = C_PATH_PROJECT_ROOT + "Deliverables/"
+C_PATH_DOCUMENTS    = C_PATH_PROJECT_ROOT + "Documents/"
+C_PATH_IMAGES       = C_PATH_PROJECT_ROOT + "Images/"
+
 
 #######################################################################################################################
 # DEVELOPED FUNCTIONS
 #######################################################################################################################
+
+def f_who_am_i():
+
+    """
+    Get name and root folder of this computer.
+
+    Parameters
+    ----------
+    -
+
+    Returns
+    -------
+    str
+        Computer name.
+    str
+        Root folder.
+    """
+
+    # Machine name of computer.
+    C_MACHINE_NAME = os.uname().machine
+
+    # Computer name.
+    if C_MACHINE_NAME in ['xxxx']:
+        C_COMPUTER_NAME = 'macstudio'
+        C_ROOT          = '/Users/macstudio/InnovateWithData Dropbox/Pieter Overdevest/Partners/'
+
+    elif C_MACHINE_NAME in ['x86_64']:
+        C_COMPUTER_NAME = 'macbookpro_intel'
+        C_ROOT          = '/Users/home/InnovateWithData Dropbox/Pieter Overdevest/Partners/'
+
+    else:
+        raise ValueError('Unknown machine name, cannot determine C_COMPUTER_NAME')
+        
+    return C_COMPUTER_NAME, C_ROOT
+
+
+#######################################################################################################################
+
 
 def f_info(
 
@@ -896,33 +947,17 @@ def f_read_data_from_file(
 
 
     # Comms to the user.
-    print(f"\nReading data:")
+    print(f"\nReading at : {datetime.now()}")
 
-    print(f"Requested : '{c_file_string}' (file), '{c_type}' (type)")
+    print(f"Requested  : '{c_file_string}' (file), '{c_type}' (type)")
 
-    print(f"Read file : '{ps_file.file}'")
+    print(f"Read file  : '{ps_file.file}'")
 
-    print(f"Path      : '{c_path}'")
+    print(f"Path       : '.../{re.sub(f_who_am_i()[1], '', c_path)}'")
 
-    print(f"Modified  : {ps_file.date_mod}")
+    print(f"Modified   : {ps_file.date_mod}")
 
-    print(f"Age       : {ps_file.age}")
-
-
-    print(f"At         : '{datetime.now()}'")
-
-    print(f"==========================")
-
-    # Comms to the user.
-    print(f"\nWrite : '{c_x}'")
-
-    print(f"Name  : '{c_now + c_file_string + '.' + c_type}'")
-
-    print(f"As    : '{c_type}'")
-
-    print(f"Path  : '{c_path}'")
-
-    print(f"At    : '{datetime.now()}'")
+    print(f"Age        : {ps_file.age}")
 
     print(f"==========================")
 
@@ -1074,17 +1109,15 @@ def f_write_data_to_file(
     # x[0].iloc[:,:5].to_parquet(c_path + c_now + c_file_string + " - " + l_name[i] + "." + c_type, index=False)
 
     # Comms to the user.
-    print(f"\nWriting data:")
+    print(f"\nWriting at : {datetime.now()}")
 
-    print(f"Object : '{c_x}'")
+    print(f"Object     : '{c_x}'")
 
-    print(f"Name   : '{c_now + c_file_string + '.' + c_type}'")
+    print(f"Name       : '{c_now + c_file_string + '.' + c_type}'")
 
-    print(f"As     : '{c_type}'")
+    print(f"As         : '{c_type}'")
 
-    print(f"Path   : '{c_path}'")
-
-    print(f"At     : '{datetime.now()}'")
+    print(f"Path       : '.../{re.sub(f_who_am_i()[1], '', c_path)}'")
 
     print(f"==========================")
 
