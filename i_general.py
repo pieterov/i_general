@@ -301,11 +301,11 @@ def f_info(
     # Table strings.
     #c_type_table = "Type: " + type(l_input[0]).__name__
 
-    c_freq_table = f_if_else(
+    c_freq_table = f_ifelse(
         
         isinstance(n_top, int),
 
-        f_if_else(
+        f_ifelse(
 
             n_unique <= n_top,
             "All items:",
@@ -462,7 +462,7 @@ def f_find_str(pattern, l_str):
 #######################################################################################################################
 
 # Ifelse
-def f_if_else(b_eval, true, false):
+def f_ifelse(b_eval, true, false):
 
     """
     <short description>.
