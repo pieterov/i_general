@@ -721,7 +721,7 @@ def f_check_na_in_df(
 
 def f_get_latest_file(
 
-    c_file_string,
+    c_name,
     c_path,
     c_type
     ):
@@ -731,7 +731,7 @@ def f_get_latest_file(
 
     Parameters
     ----------   
-    c_file_string: 'str'
+    c_name: 'str'
         String in the file name.
     c_path: 'str'
         Path where file resides.
@@ -747,12 +747,12 @@ def f_get_latest_file(
 
     Testing
     -------  
-    c_file_string = 'HTRI'
+    c_name = 'HTRI'
     c_path        = C_PATH_DELIVERABLES
     c_type        = 'xlsx'
 
 
-    f_get_latest_file(c_file_string, c_path, c_type)
+    f_get_latest_file(c_name, c_path, c_type)
     """ 
 
 
@@ -773,7 +773,7 @@ def f_get_latest_file(
         'file': f_find_str(
             
             # String to search for in the file names.
-            pattern = c_file_string,
+            pattern = c_name,
 
             # List with all files in c_path.
             l_str   = [
@@ -790,7 +790,7 @@ def f_get_latest_file(
     # Error check - Is a file found?
     if df_file.shape[0] == 0:
         raise LookupError(
-            f"No file found for:\nFile name: '{c_file_string}'\nFile type: '{c_type}'\nFile path: '{c_path}'"
+            f"No file found for:\nFile name: '{c_name}'\nFile type: '{c_type}'\nFile path: '{c_path}'"
         )
 
     # Add number of seconds since epoch.
@@ -841,10 +841,10 @@ def f_get_latest_file(
 
 def f_read_data_from_file(
 
-    c_file_string,
+    c_name,
     c_path,
     c_type     = "xlsx",
-    c_name     = None,
+    c_sheet    = None,
     l_usecols  = None,
     n_skiprows = None,
     n_header   = 0
@@ -855,13 +855,13 @@ def f_read_data_from_file(
 
     Parameters
     ----------   
-    c_file_string: 'str'
+    c_name: 'str'
         Name of the file where data is to be read from.
     c_path: 'str'
         Path where file resides.
     c_type: 'str'
         Reference to file type to be read (default: 'xlsx').
-    c_name: 'str'
+    c_sheet: 'str'
         Sheet name in case data is to read from Excel file (default: 'None').
     l_usecols: 'int',
         If list of int, then indicates list of column numbers to be parsed (0-indexed).
@@ -877,15 +877,22 @@ def f_read_data_from_file(
 
     Testing
     -------  
-    c_file_string = "HTRI"
-    c_path        = C_PATH_DELIVERABLES
-    c_type        = 'xlsx'
-    c_type        = 'csv'
-    c_type        = 'parquet'
-    c_name        = None
-    c_name        = 'DATA1'
+    c_name  = "HTRI"
+    c_path  = C_PATH_DELIVERABLES
+    c_type  = 'xlsx'
+    c_type  = 'csv'
+    c_type  = 'parquet'
+    c_sheet = None
+    c_sheet = 'DATA1'
 
-    f_read_data_to_file(c_file_string, c_path, c_type, l_name)
+    df_nline_w_result_all = f_read_data_from_file(
+
+        c_name = "Predicted N-lines - Distance 4 - nline_w",
+        c_type = "parquet",
+        c_path = '/Users/home/InnovateWithData Dropbox/Pieter Overdevest/Partners/BLC/Projects/2022 10 - N-line Modelling/Data/'
+    )
+
+    f_read_data_to_file(c_name, c_path, c_type, l_name)
     """ 
 
 
@@ -897,7 +904,7 @@ def f_read_data_from_file(
     l_type_valid = ['xlsx', 'xlsm', 'csv', 'parquet']
 
     # Latest file.
-    ps_file = f_get_latest_file(c_file_string, c_path, c_type)
+    ps_file = f_get_latest_file(c_name, c_path, c_type)
 
 #----------------------------------------------------------------------------------------------------------------------
 # Error check.
@@ -917,7 +924,7 @@ def f_read_data_from_file(
         df_data = pd.read_excel(
 
             io         = os.path.join(c_path, ps_file.file),
-            sheet_name = c_name,
+            sheet_name = c_sheet,
             usecols    = l_usecols,
             skiprows   = n_skiprows,
             header     = n_header
@@ -938,7 +945,7 @@ def f_read_data_from_file(
     # Parquet
     if c_type == 'parquet':
 
-        df_data = pd.read_csv(
+        df_data = pd.read_parquet(
 
             path    = os.path.join(c_path, ps_file.file),
             engine  = 'pyarrow',
@@ -949,9 +956,12 @@ def f_read_data_from_file(
     # Comms to the user.
     print(f"\nReading at : {datetime.now()}")
 
-    print(f"Requested  : '{c_file_string}' (file), '{c_type}' (type)")
+    print(f"Requested  : '{c_name}' (file), '{c_type}' (type)")
 
     print(f"Read file  : '{ps_file.file}'")
+
+    if c_type in ['xlsx', 'xlsm'] and c_sheet is not None:
+        print(f"Sheet name : '{c_sheet}'")
 
     print(f"Path       : '.../{re.sub(f_who_am_i()[1], '', c_path)}'")
 
@@ -974,7 +984,7 @@ def f_read_data_from_file(
 def f_write_data_to_file(
 
     x,
-    c_file_string,
+    c_name,
     c_path,
     c_type = "xlsx",
     l_name = None
@@ -987,7 +997,7 @@ def f_write_data_to_file(
     ----------
     x: 'list' or 'Pandas Series' of values, 'Pandas DataFrame', or 'list' of 'Pandas DataFrame'
         Data object to write to file.    
-    c_file_string: 'str'
+    c_name: 'str'
         Name of the file where data object will be saved in.
     c_path: 'str'
         Path where file will be saved.
@@ -1007,7 +1017,7 @@ def f_write_data_to_file(
     x             =  pd.DataFrame({'a': [1,2,3,2,3,3], 'b': [5,6,7,8,9,9]})
     x             = pd.Series([1,2,3,4])
     x             = [1,2,3,2,3,3]    
-    c_file_string = "Data file"
+    c_name = "Data file"
     c_path        = C_PATH_DELIVERABLES
     c_type        = 'xlsx'
     c_type        = 'csv'
@@ -1015,7 +1025,7 @@ def f_write_data_to_file(
     l_name        = None
     l_name        = ['DATA1', 'DATA2']
 
-    f_write_data_to_file(x, c_file_string, c_path, c_type, l_name)
+    f_write_data_to_file(x, c_name, c_path, c_type, l_name)
     """ 
 
 
@@ -1072,7 +1082,7 @@ def f_write_data_to_file(
     # Excel - Store dataframe(s) in separate worksheets in same workbook.
     if c_type == 'xlsx':
 
-        with pd.ExcelWriter(c_path + c_now + c_file_string + "." + c_type) as writer:
+        with pd.ExcelWriter(c_path + c_now + c_name + "." + c_type) as writer:
 
             for i in range(len(x)):
 
@@ -1089,7 +1099,7 @@ def f_write_data_to_file(
         for i in range(len(x)):
 
             x[i].to_csv(
-                path  = c_path + c_now + c_file_string + " - " + l_name[i] + "." + c_type,
+                path  = c_path + c_now + c_name + " - " + l_name[i] + "." + c_type,
                 index = False
             )
 
@@ -1100,20 +1110,20 @@ def f_write_data_to_file(
         for i in range(len(x)):
 
             x[i].to_parquet(
-                path   = c_path + c_now + c_file_string + " - " + l_name[i] + "." + c_type,
+                path   = c_path + c_now + c_name + " - " + l_name[i] + "." + c_type,
                 index  = False,
                 engine = 'pyarrow'
             )
 
 
-    # x[0].iloc[:,:5].to_parquet(c_path + c_now + c_file_string + " - " + l_name[i] + "." + c_type, index=False)
+    # x[0].iloc[:,:5].to_parquet(c_path + c_now + c_name + " - " + l_name[i] + "." + c_type, index=False)
 
     # Comms to the user.
     print(f"\nWriting at : {datetime.now()}")
 
     print(f"Object     : '{c_x}'")
 
-    print(f"Name       : '{c_now + c_file_string + '.' + c_type}'")
+    print(f"Name       : '{c_now + c_name + '.' + c_type}'")
 
     print(f"As         : '{c_type}'")
 
