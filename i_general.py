@@ -69,18 +69,22 @@ def f_who_am_i():
     # Machine name of computer.
     C_MACHINE_NAME = os.uname().machine
 
+    
+
     # Computer name.
     if C_MACHINE_NAME in ['xxxx']:
         C_COMPUTER_NAME = 'macstudio'
-        C_ROOT          = '/Users/macstudio/InnovateWithData Dropbox/Pieter Overdevest/Partners/'
-
+    
     elif C_MACHINE_NAME in ['x86_64']:
         C_COMPUTER_NAME = 'macbookpro_intel'
-        C_ROOT          = '/Users/home/InnovateWithData Dropbox/Pieter Overdevest/Partners/'
 
     else:
         raise ValueError('Unknown machine name, cannot determine C_COMPUTER_NAME')
         
+        
+    # Root folder.
+    C_ROOT = re.search(r'.+/Partners/', os.getcwd()).group()
+    
     return C_COMPUTER_NAME, C_ROOT
 
 
@@ -889,7 +893,7 @@ def f_read_data_from_file(
 
         c_name = "Predicted N-lines - Distance 4 - nline_w",
         c_type = "parquet",
-        c_path = '/Users/home/InnovateWithData Dropbox/Pieter Overdevest/Partners/BLC/Projects/2022 10 - N-line Modelling/Data/'
+        c_path = C_PATH_DATA
     )
 
     f_read_data_to_file(c_name, c_path, c_type, l_name)
