@@ -67,22 +67,21 @@ def f_who_am_i():
     """
 
     # Machine name of computer.
-    C_MACHINE_NAME = os.uname().machine
-
+    C_MACHINE_NAME = os.uname().nodename
     
 
     # Computer name.
     if C_MACHINE_NAME in ['xxxx']:
         C_COMPUTER_NAME = 'macstudio'
     
-    elif C_MACHINE_NAME in ['x86_64']:
-        C_COMPUTER_NAME = 'macbookpro_intel'
+    elif C_MACHINE_NAME in ['Pieters-MacBook-Pro.local']:
+        C_COMPUTER_NAME = 'macbookpro'
 
     else:
         raise ValueError('Unknown machine name, cannot determine C_COMPUTER_NAME')
         
         
-    # Root folder.
+    # Root folder (Partner folder).
     C_ROOT = re.search(r'.+/Partners/', os.getcwd()).group()
     
     return C_COMPUTER_NAME, C_ROOT
