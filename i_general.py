@@ -35,8 +35,6 @@ import matplotlib.pyplot as plt
 # Path to code folder of this project.
 C_PATH_CODE = os.getcwd()
 
-#print(C_PATH_CODE)
-
 # Paths to project root folder and sub-folders.
 C_PATH_PROJECT_ROOT = re.sub("Code", "", C_PATH_CODE)
 C_PATH_DATA         = C_PATH_PROJECT_ROOT + "Data/"
