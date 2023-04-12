@@ -71,7 +71,7 @@ def f_who_am_i():
     
 
     # Computer name.
-    if C_MACHINE_NAME in ['xxxx']:
+    if C_MACHINE_NAME in ['Pieters-Mac-Studio.local']:
         C_COMPUTER_NAME = 'macstudio'
     
     elif C_MACHINE_NAME in ['Pieters-MacBook-Pro.local']:
@@ -611,7 +611,7 @@ def f_check_nonnumeric_in_df(
 
         print(df_eval.head(5))
 
-        print("\nFor reference, the full data frame, incl. those columns that were not evaluated:")
+        print("\nFor reference, the full data frame, incl. those columns that were not evaluated:\n")
 
         print(df_input.filter(items = df_eval.index, axis=0).head(5))
 
@@ -708,10 +708,11 @@ def f_check_na_in_df(
 
         print(
             f"\nFor reference, the full data frame, incl. those columns that were not evaluated. "
-            "Below, we show at max the first 5 rows:"
+            "Below, we show at max the first 5 rows:\n"
         )
 
-        print(df_input.filter(items = df_eval.index, axis=0).head(5))
+        #print(df_input.filter(items = df_eval.index, axis=0).head(5))
+        print(df_input.head(5))
 
         print("\n")
 
@@ -986,7 +987,7 @@ def f_read_data_from_file(
 
 def f_write_data_to_file(
 
-    x,
+    l_df,
     c_name,
     c_path,
     c_type = "xlsx",
@@ -998,7 +999,7 @@ def f_write_data_to_file(
 
     Parameters
     ----------
-    x: 'list' or 'Pandas Series' of values, 'Pandas DataFrame', or 'list' of 'Pandas DataFrame'
+    l_df: 'list' or 'Pandas Series' of values, 'Pandas DataFrame', or 'list' of 'Pandas DataFrame'
         Data object to write to file.    
     c_name: 'str'
         Name of the file where data object will be saved in.
@@ -1016,10 +1017,10 @@ def f_write_data_to_file(
 
     Testing
     -------
-    x             = [pd.DataFrame({'a': [1,2,3,2,3,3], 'b': [5,6,7,8,9,9]}), pd.DataFrame({'a': [1,2,3], 'b': [5,6,7]})]
-    x             =  pd.DataFrame({'a': [1,2,3,2,3,3], 'b': [5,6,7,8,9,9]})
-    x             = pd.Series([1,2,3,4])
-    x             = [1,2,3,2,3,3]    
+    l_df          = [pd.DataFrame({'a': [1,2,3,2,3,3], 'b': [5,6,7,8,9,9]}), pd.DataFrame({'a': [1,2,3], 'b': [5,6,7]})]
+    l_df          =  pd.DataFrame({'a': [1,2,3,2,3,3], 'b': [5,6,7,8,9,9]})
+    l_df          = pd.Series([1,2,3,4])
+    l_df          = [1,2,3,2,3,3]    
     c_name = "Data file"
     c_path        = C_PATH_DELIVERABLES
     c_type        = 'xlsx'
@@ -1028,7 +1029,7 @@ def f_write_data_to_file(
     l_name        = None
     l_name        = ['DATA1', 'DATA2']
 
-    f_write_data_to_file(x, c_name, c_path, c_type, l_name)
+    f_write_data_to_file(l_df, c_name, c_path, c_type, l_name)
     """ 
 
 
@@ -1037,7 +1038,7 @@ def f_write_data_to_file(
 #----------------------------------------------------------------------------------------------------------------------
 
     # Assign object name, for later use when communicating to user, see end.
-    c_x = f_var_name(x)
+    c_l_df = f_var_name(l_df)
 
     # Valid file types.
     l_type_valid = ['xlsx', 'csv', 'parquet']
@@ -1047,15 +1048,15 @@ def f_write_data_to_file(
     c_now  = re.sub("-", " ", str(dt_now.date())) + " - " + dt_now.strftime("%H %M %S") + " - "
 
 
-    # Check on type of x and make corrections as needed.
-    if isinstance(x, list) and not isinstance(x[0], pd.DataFrame):
-        x = pd.Series(x)
+    # Check on type of l_df and make corrections as needed.
+    if isinstance(l_df, list) and not isinstance(l_df[0], pd.DataFrame):
+        l_df = pd.Series(l_df)
 
-    if isinstance(x, pd.Series):
-        x = pd.DataFrame({'x': x})
+    if isinstance(l_df, pd.Series):
+        l_df = pd.DataFrame({'l_df': l_df})
 
-    if isinstance(x, pd.DataFrame):
-        x = [x]
+    if isinstance(l_df, pd.DataFrame):
+        l_df = [l_df]
 
 
     # Check on type of l_name and make corrections as needed.
@@ -1071,8 +1072,8 @@ def f_write_data_to_file(
 # Error check.
 #----------------------------------------------------------------------------------------------------------------------
 
-    if len(x) != len(l_name):
-        raise IndexError("Length of 'x' and 'l_name' are not the same.")
+    if len(l_df) != len(l_name):
+        raise IndexError("Length of 'l_df' and 'l_name' are not the same.")
 
     if c_type not in l_type_valid :
         raise ValueError(f"You did not provide a valid file type. Choose 'c_type' to be one of {', '.join(l_type_valid)}.")
@@ -1087,9 +1088,9 @@ def f_write_data_to_file(
 
         with pd.ExcelWriter(c_path + c_now + c_name + "." + c_type) as writer:
 
-            for i in range(len(x)):
+            for i in range(len(l_df)):
 
-                x[i].to_excel(
+                l_df[i].to_excel(
                     excel_writer = writer,
                     sheet_name   = l_name[i],
                     index        = False
@@ -1099,9 +1100,9 @@ def f_write_data_to_file(
     # CSV - Store dataframe(s) in separate CSV files.
     if c_type == 'csv':
 
-        for i in range(len(x)):
+        for i in range(len(l_df)):
 
-            x[i].to_csv(
+            l_df[i].to_csv(
                 path  = c_path + c_now + c_name + " - " + l_name[i] + "." + c_type,
                 index = False
             )
@@ -1110,21 +1111,21 @@ def f_write_data_to_file(
     # Parquet - Store dataframe(s) in separate CSV files.
     if c_type == 'parquet':
 
-        for i in range(len(x)):
+        for i in range(len(l_df)):
 
-            x[i].to_parquet(
+            l_df[i].to_parquet(
                 path   = c_path + c_now + c_name + " - " + l_name[i] + "." + c_type,
                 index  = False,
                 engine = 'pyarrow'
             )
 
 
-    # x[0].iloc[:,:5].to_parquet(c_path + c_now + c_name + " - " + l_name[i] + "." + c_type, index=False)
+    # l_df[0].iloc[:,:5].to_parquet(c_path + c_now + c_name + " - " + l_name[i] + "." + c_type, index=False)
 
     # Comms to the user.
     print(f"\nWriting at : {datetime.now()}")
 
-    print(f"Object     : '{c_x}'")
+    print(f"Object     : '{c_l_df}'")
 
     print(f"Name       : '{c_now + c_name + '.' + c_type}'")
 
