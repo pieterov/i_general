@@ -1082,6 +1082,7 @@ def f_write_data_to_file(
 #----------------------------------------------------------------------------------------------------------------------
 
     # Excel - Store dataframe(s) in separate worksheets in same workbook.
+    # To check later - https://xlsxwriter.readthedocs.io/example_pandas_table.html
     if c_type == 'xlsx':
 
         with pd.ExcelWriter(c_path + c_now + c_name + "." + c_type) as writer:
