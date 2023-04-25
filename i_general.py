@@ -130,6 +130,7 @@ def f_info(
     df_ames = pd.read_csv('https://raw.githubusercontent.com/jads-nl/discover-projects/main/ames-housing/AmesHousing.csv')
     x = df_ames['Pool QC']
     x = df_ames['Lot Frontage']
+    x = df_files_subset['file_name']
 
     n_top   = 10
     n_width = 18
@@ -164,8 +165,7 @@ def f_info(
     n_unique = len(set(l_input))
 
     # Number to show.
-    if(n_top == "all"):
-        
+    if(n_top == "all"):        
         n_top = n_unique
 
     # We take max of length and 3 to prevent count errors below. Width is at least 3.
@@ -205,7 +205,7 @@ def f_info(
     })
 
     # Append numerical statistics in case x contains numerical data.
-    if isinstance(l_input[0], (int, float, complex)):
+    if isinstance(l_input.values[0], (int, float, complex)):
 
         df_basic_info = pd.concat(
 
@@ -324,7 +324,7 @@ def f_info(
 
         "All items:"
 
-    ) + " (type: '" + type(l_input[0]).__name__ + "')"
+        ) + " (type: '" + type(l_input.values[0]).__name__ + "')"
 
     # Header frequency table.
     
