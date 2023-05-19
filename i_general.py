@@ -1341,7 +1341,7 @@ def f_seq_along(l_input):
 
 #######################################################################################################################
 
-def reg_coef(v_x, v_y, label = None, color = None, **kwargs):
+def reg_coef(ps_x, ps_y, label=None, color=None, **kwargs):
 
     """
     To calculate correlation coefficients in PairGrid plot.
@@ -1361,7 +1361,7 @@ def reg_coef(v_x, v_y, label = None, color = None, **kwargs):
 
     ax = plt.gca()
 
-    r,p = pearsonr(v_x, v_y)
+    r,p = pearsonr(ps_x, ps_y)
 
     ax.annotate('r = {:.2f}'.format(r), xy=(0.5, 0.5), xycoords = 'axes fraction', ha = 'center')
 
@@ -1411,13 +1411,15 @@ def f_heatmap(
 
 #######################################################################################################################
 
-def f_train_test_split(df_X, v_y):
+def f_train_test_split(df_X, ps_y, n_test_size=0.33):
 
     """
     Perform train/test split and share dimensions with user.
 
     Parameters
     ----------
+    <name> : <type>
+        <short description>.
     <name> : <type>
         <short description>.
     <name> : <type>
@@ -1429,30 +1431,30 @@ def f_train_test_split(df_X, v_y):
         <short description>.
     """
 
-    df_X_train, df_X_test, v_y_train, v_y_test = train_test_split(df_X, v_y, test_size=0.33, random_state=42)
+    df_X_train, df_X_test, ps_y_train, ps_y_test = train_test_split(df_X, ps_y, test_size=n_test_size, random_state=42)
 
     print(f"Dimension of df_X_train:                       {df_X_train.shape[0]} by {df_X_train.shape[1]}")
-    print(f"Dimension of df_X_test:                        {df_X_test.shape[0]}  by {df_X_test.shape[1]}")
+    print(f"Dimension of df_X_test:                        {df_X_test.shape[0]} by {df_X_test.shape[1]}")
 
-    print(f"Length of v_y_train:                           {v_y_train.shape[0]}")
-    print(f"Length of v_y_test:                            {v_y_test.shape[0]}\n")
+    print(f"Length of ps_y_train:                          {ps_y_train.shape[0]}")
+    print(f"Length of ps_y_test:                           {ps_y_test.shape[0]}\n")
 
-    print(f"Combined number of rows in train and test set: {v_y_train.shape[0] + v_y_test.shape[0]}")
+    print(f"Combined number of rows in train and test set: {ps_y_train.shape[0] + ps_y_test.shape[0]}")
     print(f"Original number of rows:                       {df_X.shape[0]}")
-    print(f"Actual split:                                  {round(v_y_test.shape[0]/v_y.shape[0], 2)}")
+    print(f"Actual split:                                  {round(ps_y_test.shape[0]/ps_y.shape[0], 2)}")
 
-    return df_X_train, df_X_test, v_y_train, v_y_test
+    return df_X_train, df_X_test, ps_y_train, ps_y_test
 
 
 #######################################################################################################################
 
 # Share model evaluation results with the user.
-def f_evaluation_results(v_y_true, v_y_pred):
+def f_evaluation_results(ps_y_true, ps_y_pred):
 
     print("Performance Metrics:")
-    print(f"MAE:  {metrics.mean_absolute_error(v_y_true, v_y_pred):,.1f}")
-    print(f"MSE:  {metrics.mean_squared_error(v_y_true, v_y_pred):,.1f}")
-    print(f"RMSE: {metrics.mean_squared_error(v_y_true, v_y_pred, squared=False):,.1f}")
+    print(f"MAE:  {metrics.mean_absolute_error(ps_y_true, ps_y_pred):,.1f}")
+    print(f"MSE:  {metrics.mean_squared_error(ps_y_true, ps_y_pred):,.1f}")
+    print(f"RMSE: {metrics.mean_squared_error(ps_y_true, ps_y_pred, squared=False):,.1f}")
 
 
 #######################################################################################################################
