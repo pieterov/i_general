@@ -585,36 +585,6 @@ def f_grepl(pattern, l_str):
 
 #######################################################################################################################
 
-def f_find_str(pattern, l_str):
-
-    """
-    Searches for matches to argument 'pattern' within each element of a character list, 'l_str'.
-
-    Parameters
-    ----------
-    pattern : 'str'
-        Regex pattern.
-    l_str : 'list'
-        Character list.
-
-    Returns
-    -------
-    list
-        String list, including the items matching the pattern.
-
-    Testing
-    -------
-    f_find_str("P$", ["Pieter", "BartP", "Theo", "aPieter"])
-    """
-
-    reg = re.compile(pattern)
-
-    return list(filter(reg.search, l_str)) 
-
-
-
-#######################################################################################################################
-
 # Ifelse
 def f_ifelse(b_eval, true, false):
 
@@ -903,9 +873,12 @@ def f_get_latest_file(
     Testing
     -------  
     c_name = 'HTRI'
-    c_path        = C_PATH_DELIVERABLES
-    c_type        = 'xlsx'
+    c_path = C_PATH_DELIVERABLES
+    c_type = 'xlsx'
 
+    c_name = 'Den Haag - Displays - Overzicht na plaatsing'
+    c_path = c_path_file_xls
+    c_type = 'xlsx'
 
     f_get_latest_file(c_name, c_path, c_type)
     """ 
@@ -923,23 +896,22 @@ def f_get_latest_file(
 # Main.
 #----------------------------------------------------------------------------------------------------------------------
 
-    # Get all files in said folder, excl. any folders.
+    # Get all files in said folder, excl. any folders. I replaced f_find_str by list(filter(re.compile(c_name).search, list))
     df_file = pd.DataFrame({
-        'file': f_find_str(
+        'file': list(filter(
             
             # String to search for in the file names.
-            pattern = c_name,
+            re.compile(c_name).search,
 
             # List with all files in c_path.
-            l_str   = [
-                
+            [                
                 f for f in os.listdir(c_path)
 
                 # Filter on files only (excl dirs) and on the requested file type.
                 if os.path.isfile(os.path.join(c_path, f)) and
                     os.path.splitext(os.path.join(c_path, f))[1]== '.'+c_type
             ]
-        )
+        ))
     })
 
     # Error check - Is a file found?
