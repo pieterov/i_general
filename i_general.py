@@ -46,10 +46,10 @@ C_PATH_CODE = os.getcwd()
 
 # Paths to project root folder and sub-folders.
 C_PATH_PROJECT_ROOT = re.sub("Code", "", C_PATH_CODE)
-C_PATH_DATA         = C_PATH_PROJECT_ROOT + "Data/"
-C_PATH_DELIVERABLES = C_PATH_PROJECT_ROOT + "Deliverables/"
-C_PATH_DOCUMENTS    = C_PATH_PROJECT_ROOT + "Documents/"
-C_PATH_IMAGES       = C_PATH_PROJECT_ROOT + "Images/"
+C_PATH_DATA         = os.path.join(C_PATH_PROJECT_ROOT, "Data")
+C_PATH_DELIVERABLES = os.path.join(C_PATH_PROJECT_ROOT, "Deliverables")
+C_PATH_DOCUMENTS    = os.path.join(C_PATH_PROJECT_ROOT, "Documents")
+C_PATH_IMAGES       = os.path.join(C_PATH_PROJECT_ROOT, "Images")
 
 
 #######################################################################################################################
@@ -1210,7 +1210,7 @@ def f_write_data_to_file(
     # To check later - https://xlsxwriter.readthedocs.io/example_pandas_table.html
     if c_type == 'xlsx':
 
-        with pd.ExcelWriter(c_path + c_now + c_name + "." + c_type) as writer:
+        with pd.ExcelWriter(os.path.join(c_path, c_now + c_name + "." + c_type)) as writer:
 
             for i in range(len(l_df)):
 
@@ -1227,7 +1227,7 @@ def f_write_data_to_file(
         for i in range(len(l_df)):
 
             l_df[i].to_csv(
-                path  = c_path + c_now + c_name + " - " + l_name[i] + "." + c_type,
+                path  = os.path.join(c_path, c_now + c_name + " - " + l_name[i] + "." + c_type),
                 index = False
             )
 
@@ -1238,7 +1238,7 @@ def f_write_data_to_file(
         for i in range(len(l_df)):
 
             l_df[i].to_parquet(
-                path   = c_path + c_now + c_name + " - " + l_name[i] + "." + c_type,
+                path   = os.path.join(c_path, c_now + c_name + " - " + l_name[i] + "." + c_type),
                 index  = False,
                 engine = 'pyarrow'
             )
