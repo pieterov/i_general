@@ -1424,9 +1424,9 @@ def f_train_test_split(df_X, ps_y, n_test_size=0.33):
 def f_evaluation_results(ps_y_true, ps_y_pred):
 
     print("Performance Metrics:")
-    print(f"MAE:  {metrics.mean_absolute_error(ps_y_true, ps_y_pred):,.1f}")
-    print(f"MSE:  {metrics.mean_squared_error(ps_y_true, ps_y_pred):,.1f}")
-    print(f"RMSE: {metrics.mean_squared_error(ps_y_true, ps_y_pred, squared=False):,.1f}")
+    print(f"MAE:  {metrics.mean_absolute_error(ps_y_true, ps_y_pred):,.3f}")
+    print(f"MSE:  {metrics.mean_squared_error(ps_y_true, ps_y_pred):,.3f}")
+    print(f"RMSE: {metrics.mean_squared_error(ps_y_true, ps_y_pred, squared=False):,.3f}")
 
 
 #######################################################################################################################
