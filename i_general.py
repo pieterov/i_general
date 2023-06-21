@@ -81,7 +81,7 @@ def f_who_am_i():
     if C_MACHINE_NAME in ['Pieters-Mac-Studio.local']:
         C_COMPUTER_NAME = 'macstudio'
     
-    elif C_MACHINE_NAME in ['Pieters-MacBook-Pro.local']:
+    elif C_MACHINE_NAME in ['Pieters-MacBook-Pro.local', 'Pieters-MBP']:
         C_COMPUTER_NAME = 'macbookpro'
 
     else:
