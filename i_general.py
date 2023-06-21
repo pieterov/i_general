@@ -632,17 +632,14 @@ def f_clean_up_header_names(l_input):
     """
 
     return [
-
         # Put in lower case:
-        y.lower() for y in [
+        x3.lower() for x3 in [
 
         # Replace space by '_':
-        re.sub(" ", "_", x) for x in
+        re.sub(" |\.", "_", x2) for x2 in [
 
-        l_input
-
-        ]
-    ]
+        str(x1) for x1 in l_input        
+    ]]]
 
 
 #######################################################################################################################
@@ -1054,7 +1051,8 @@ def f_read_data_from_file(
             sheet_name = c_sheet,
             usecols    = l_usecols,
             skiprows   = n_skiprows,
-            header     = n_header
+            header     = n_header,
+            engine     = 'openpyxl'
         )
 
     # CSV
