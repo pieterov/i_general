@@ -614,6 +614,18 @@ def f_ifelse(b_eval, true, false):
 
 #######################################################################################################################
 
+# Test whether number is number
+def f_is_numerical(value):
+
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
+        
+
+#######################################################################################################################
+
 def f_clean_up_header_names(l_input):
 
     """
@@ -630,13 +642,14 @@ def f_clean_up_header_names(l_input):
     list
         Cleaned up column names.
     """
+    
 
     return [
         # Put in lower case:
         x3.lower() for x3 in [
 
         # Replace space by '_':
-        re.sub(" |\.", "_", x2) for x2 in [
+        x2 if f_is_numerical(x2) else re.sub(" |\.", "_", x2) for x2 in [
 
         str(x1) for x1 in l_input        
     ]]]
@@ -967,11 +980,12 @@ def f_read_data_from_file(
 
     c_name,
     c_path,
-    c_type     = "xlsx",
-    c_sheet    = None,
-    l_usecols  = None,
-    n_skiprows = None,
-    n_header   = 0
+    c_type      = "xlsx",
+    c_sheet     = None,
+    l_usecols   = None,
+    n_skiprows  = None,
+    n_header    = 0,
+    b_clean_col = True
     ):
 
     """
@@ -993,6 +1007,8 @@ def f_read_data_from_file(
         Line numbers to skip (0-indexed) or number of lines to skip (int) at the start of the file. 
     n_header: 'int'
         Row (0-indexed) to use for the column labels of the parsed DataFrame.
+    b_clean_col: 'bool'
+        Do we clean up the header names? (default: True)
 
     Returns
     -------
@@ -1076,6 +1092,11 @@ def f_read_data_from_file(
             engine  = 'pyarrow',
             columns = l_usecols
         )
+
+
+    # Clean up header names.
+    if b_clean_col:
+        df_data.columns = f_clean_up_header_names(l_input = df_data.columns)
 
 
     # Comms to the user.
