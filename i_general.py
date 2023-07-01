@@ -1364,8 +1364,10 @@ def reg_coef(ps_x, ps_y, label=None, color=None, **kwargs):
 def f_heatmap(
         df_input,
         v_features_to_show,
-        b_add_annotate     = True,
-        n_font_size        = 15
+        b_annotate         = True,
+        n_font_size        = 15,
+        n_vmin             = -1,
+        n_vmax             = 1,
     ):
 
     """
@@ -1392,11 +1394,13 @@ def f_heatmap(
 
     sns.heatmap(        
         data      = df_cor,
-        annot     = b_add_annotate,
+        annot     = b_annotate,
         annot_kws = {'size': n_font_size},
         square    = True,
         cmap      = 'coolwarm',
-        mask      = m_matrix
+        mask      = m_matrix,
+        vmin      = n_vmin,
+        vmax      = n_vmax
     );
 
 
