@@ -191,7 +191,7 @@ def f_info(
 
             f"{len(l_input):,}".rjust(n_char_count),
             f"{n_unique:,}".rjust(n_char_count),
-            f"{sum(l_input==''):,}".rjust(n_char_count),
+            f"{pd.Series(l_input=='').sum():,}".rjust(n_char_count),
             f"{sum(pd.isna(x) for x in l_input):,}".rjust(n_char_count)
         ],
 
@@ -199,7 +199,7 @@ def f_info(
             
             "",
             "",
-            f"{round(sum(l_input=='') / n_len * 100, 1)}%".rjust(4),
+            f"{round(pd.Series(l_input=='').sum() / n_len * 100, 1)}%".rjust(4),
             f"{round(sum(pd.isna(x) for x in l_input) / n_len * 100, 1)}%".rjust(4)
         ]
     })
