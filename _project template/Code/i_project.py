@@ -34,6 +34,12 @@ import numpy as np
 # https://stackoverflow.com/questions/53965596/python-3-openpyxl-userwarning-data-validation-extension-not-supported
 warnings.simplefilter(action='ignore', category=UserWarning)
 
+# Add path to 'i_general'.
+sys.path.append(os.path.join(
+    re.search(r'.+/Partners/', os.getcwd()).group(),
+    'IWD/Projects/i-general/')
+)
+
 
 #----------------------------------------------------------------------------------------------------------------------
 # PARAMETERS
@@ -47,12 +53,6 @@ warnings.simplefilter(action='ignore', category=UserWarning)
 # MODULES
 #----------------------------------------------------------------------------------------------------------------------
 
-# Add path to 'i_general'.
-sys.path.append(os.path.join(
-    re.search(r'.+/Partners/', os.getcwd()).group(),
-    'IWD/Projects/i-general/')
-)
-
 from i_general import *
 
 
@@ -63,11 +63,6 @@ from i_general import *
 #----------------------------------------------------------------------------------------------------------------------
 # MODULES
 #----------------------------------------------------------------------------------------------------------------------
-
-from sklearn.decomposition import PCA
-from sklearn.linear_model  import LinearRegression
-from sklearn.preprocessing import StandardScaler
-
 
 #----------------------------------------------------------------------------------------------------------------------
 # PARAMETERS
