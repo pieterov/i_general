@@ -1124,6 +1124,34 @@ def f_read_data_from_file(
 
     return df_data
 
+#######################################################################################################################
+
+def f_now():
+
+    """
+    Get string containing today's date and current time.
+
+    Parameters
+    ----------
+    -
+
+    Returns
+    -------
+    str
+        String containing today's date and current time.
+
+    Testing
+    -------
+    """ 
+
+    # Current time.
+    dt_now = datetime.now()
+
+    return(
+        re.sub("-", " ", str(dt_now.date())) + " - " +
+        dt_now.strftime("%H %M %S")
+    )
+
 
 #######################################################################################################################
 
@@ -1185,9 +1213,8 @@ def f_write_data_to_file(
     # Valid file types.
     l_type_valid = ['xlsx', 'csv', 'parquet']
 
-    # Current time.
-    dt_now = datetime.now()
-    c_now  = re.sub("-", " ", str(dt_now.date())) + " - " + dt_now.strftime("%H %M %S") + " - "
+    # Current date and time.
+    c_now  = f_now() + " - "
 
 
     # Check on type of l_df and make corrections as needed.
