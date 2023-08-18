@@ -132,8 +132,9 @@ def f_info(
     x = df_ames['Lot Frontage']
     x = df_files_subset['file_name']
 
-    n_top   = 10
-    n_width = 18
+    x = df_data.competentie
+    n_top   = 50
+    n_width = 50
     """
 
 
@@ -980,12 +981,14 @@ def f_read_data_from_file(
 
     c_name,
     c_path,
-    c_type      = "xlsx",
-    c_sheet     = None,
-    l_usecols   = None,
-    n_skiprows  = None,
-    n_header    = 0,
-    b_clean_col = True
+    c_type               = "xlsx",
+    c_sheet              = None,
+    c_sep                = ',',
+    l_usecols            = None,
+    n_skiprows           = None,
+    n_header             = 0,
+    b_clean_header_names = True,
+    b_strip_spaces       = False
     ):
 
     """
@@ -1007,8 +1010,10 @@ def f_read_data_from_file(
         Line numbers to skip (0-indexed) or number of lines to skip (int) at the start of the file. 
     n_header: 'int'
         Row (0-indexed) to use for the column labels of the parsed DataFrame.
-    b_clean_col: 'bool'
+    b_clean_header_names: 'bool'
         Do we clean up the header names? (default: True)
+    b_strip_spaces: 'bool'
+        Do we strip spaces before and after the data in each cell? (default: False)
 
     Returns
     -------
@@ -1077,7 +1082,7 @@ def f_read_data_from_file(
         df_data = pd.read_csv(
 
             filepath_or_buffer = os.path.join(c_path, ps_file.file),
-            sep                = ',',
+            sep                = c_sep,
             usecols            = l_usecols,
             skiprows           = n_skiprows,
             header             = n_header
@@ -1094,9 +1099,14 @@ def f_read_data_from_file(
         )
 
 
-    # Clean up header names.
-    if b_clean_col:
+    # Clean up header names?
+    if b_clean_header_names:
         df_data.columns = f_clean_up_header_names(l_input = df_data.columns)
+
+
+    # Strip spaces before and after the data in each cell?
+    if b_strip_spaces:
+        df_data = df_data.applymap(lambda x: x.strip() if isinstance(x, str) else x)
 
 
     # Comms to the user.
@@ -1169,7 +1179,7 @@ def f_write_data_to_file(
 
     Parameters
     ----------
-    l_df: 'list' or 'Pandas Series' of values, 'Pandas DataFrame', or 'list' of 'Pandas DataFrame'
+    l_df: 'list' or 'Pandas Series' of values, 'Pandas DataFrame', or 'list' of 'Pandas DataFrame's.
         Data object to write to file.    
     c_name: 'str'
         Name of the file where data object will be saved in.
@@ -1228,13 +1238,13 @@ def f_write_data_to_file(
         l_df = [l_df]
 
 
-    # Check on type of l_name and make corrections as needed.
+    # Convert l_name to list if it is a str.
     if isinstance(l_name, str):
         l_name = [l_name]
 
-    # Check on l_name
+    # Create l_name if not provided.
     if l_name is None:
-        l_name = ['data' + str(i+1) for i in f_seq_along(x)]
+        l_name = ['data' + str(i+1) for i in f_seq_along(l_df)]
 
 
 #----------------------------------------------------------------------------------------------------------------------
