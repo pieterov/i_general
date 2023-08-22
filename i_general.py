@@ -981,14 +981,15 @@ def f_read_data_from_file(
 
     c_name,
     c_path,
-    c_type               = "xlsx",
+    c_type               = 'xlsx',
     c_sheet              = None,
     c_sep                = ',',
     l_usecols            = None,
     n_skiprows           = None,
+    n_rows               = None,
     n_header             = 0,
     b_clean_header_names = True,
-    b_strip_spaces       = False
+    b_strip_spaces       = True
     ):
 
     """
@@ -1008,6 +1009,8 @@ def f_read_data_from_file(
         If list of int, then indicates list of column numbers to be parsed (0-indexed).
     n_skiprows: 'int'
         Line numbers to skip (0-indexed) or number of lines to skip (int) at the start of the file. 
+    n_rows: 'int'
+        Number of rows to parse (default: None).
     n_header: 'int'
         Row (0-indexed) to use for the column labels of the parsed DataFrame.
     b_clean_header_names: 'bool'
@@ -1072,6 +1075,7 @@ def f_read_data_from_file(
             sheet_name = c_sheet,
             usecols    = l_usecols,
             skiprows   = n_skiprows,
+            nrows      = n_rows,
             header     = n_header,
             engine     = 'openpyxl'
         )
