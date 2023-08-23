@@ -1025,6 +1025,18 @@ def f_read_data_from_file(
 
     Testing
     -------  
+    Default:
+    c_type               = 'xlsx'
+    c_sheet              = None
+    c_sep                = ','
+    l_usecols            = None
+    n_skiprows           = None
+    n_rows               = None
+    n_header             = 0
+    b_clean_header_names = True
+    b_strip_spaces       = True
+
+
     c_name  = "HTRI"
     c_path  = C_PATH_DELIVERABLES
     c_type  = 'xlsx'
