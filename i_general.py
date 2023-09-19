@@ -1184,9 +1184,9 @@ def f_now():
 def f_write_data_to_file(
 
     l_df,
-    c_name,
-    c_path,
-    c_type = "xlsx",
+    c_name = 'Temp',
+    c_path = C_PATH_DATA,
+    c_type = 'xlsx',
     l_name = None
     ):
 
