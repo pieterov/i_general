@@ -81,7 +81,7 @@ def f_who_am_i():
     if C_MACHINE_NAME in ['Pieters-Mac-Studio.local']:
         C_COMPUTER_NAME = 'macstudio'
     
-    elif C_MACHINE_NAME in ['Pieters-MacBook-Pro.local', 'Pieters-MBP']:
+    elif C_MACHINE_NAME in ['Pieters-MacBook-Pro.local', 'Pieters-MBP', 'pieters-mbp.home']:
         C_COMPUTER_NAME = 'macbookpro'
 
     else:
@@ -1281,16 +1281,191 @@ def f_write_data_to_file(
     # Excel - Store dataframe(s) in separate worksheets in same workbook.
     # To check later - https://xlsxwriter.readthedocs.io/example_pandas_table.html
     if c_type == 'xlsx':
+       
+        from openpyxl import load_workbook
+        from openpyxl.styles import NamedStyle, Font, PatternFill, Border, Side, Alignment
 
-        with pd.ExcelWriter(os.path.join(c_path, c_now + c_name + "." + c_type)) as writer:
+        # with pd.ExcelWriter(os.path.join(c_path, c_now + c_name + "." + c_type)) as writer:
+
+        #     for i in range(len(l_df)):
+
+        #         l_df[i].to_excel(
+        #             excel_writer = writer,
+        #             sheet_name   = l_name[i],
+        #             index        = False
+        #         )
+
+        with pd.ExcelWriter(
+            
+            path   = os.path.join(c_path, c_now + c_name + "." + c_type),
+            engine = 'openpyxl',
+            mode   = 'w'
+
+        ) as writer:
+            
+            # Access the workbook
+            #workbook = writer.book
 
             for i in range(len(l_df)):
 
                 l_df[i].to_excel(
                     excel_writer = writer,
                     sheet_name   = l_name[i],
-                    index        = False
+                    index        = False,
+                    engine       = 'openpyxl'
                 )
+
+                # Access the worksheet.
+                worksheet = writer.sheets[l_name[i]]
+
+                # Set the zoom level for the worksheet to 150%.
+                worksheet.sheet_view.zoomScale = 150
+
+                # # Set column width for columns C and D.
+                # dc_col_width = {'A': 15, 'B': 10, 'C': 50, 'D': 50, 'E': 10, 'F': 10, 'G': 50}
+
+                # for k, v in dc_col_width.items():
+
+                #     # Set the column width for column C and D to width of 85.
+                #     worksheet.column_dimensions[f'{k}'].width = v
+
+                #     # # Wrap text in columns.
+                #     # for cell in worksheet[f'{col}']:
+                #     #     cell.alignment = Alignment(wrapText=True)
+
+                # # Align text in vertical direction.
+                # for col in ['A', 'B', 'C', 'D', 'E']:
+
+                #     # Wrap and vertically center text in all columns.
+                #     for cell in worksheet[f'{col}']:
+
+                #         cell.alignment = Alignment(
+                #             vertical = 'center',
+                #             wrapText = True
+                #         )
+
+                # # Define the name of the style you want to create or modify
+                # style_name = 'TableStyle'
+
+                # # Check if the style already exists in the workbook
+                # style_found = False
+                # for named_style in workbook.named_styles:
+                #     if named_style.name == style_name:
+
+                #         # If the style exists, modify it
+                #         table_style = named_style
+                #         style_found = True
+                #         break
+
+                # if not style_found:
+                #     # If the style does not exist, create a new named style
+                #     table_style = NamedStyle(name=style_name)
+
+                # # Apply font style
+                # table_style.font = Font(
+                #     #bold = True,
+                #     name = 'Arial',  # Specify the font name (e.g., Arial)
+                #     size = 11        # Specify the font size
+                # )
+
+                # # Apply fill color.
+                # table_style.fill = PatternFill(
+                #     start_color = 'FFFF00',
+                #     end_color   = 'FFFF00',
+                #     fill_type   = 'solid'
+                # )
+
+                # # Apply borders
+                # border = Border(
+                #     left=Side(border_style='thin', color='000000'),
+                #     right=Side(border_style='thin', color='000000'),
+                #     top=Side(border_style='thin', color='000000'),
+                #     bottom=Side(border_style='thin', color='000000')
+                # )
+                # table_style.border = border
+
+                # # Apply text alignment.
+                # table_style.alignment = Alignment(
+                #     #horizontal = 'center',
+                #     vertical   = 'center',
+                #     wrapText   = True
+                # )
+
+                # # Apply the style to a range (e.g., the entire table).
+                # for row in worksheet.iter_rows(                    
+                #     min_row = 2,
+                #     max_row = len(l_df[i]) + 1,
+                #     min_col = 1,
+                #     max_col = len(l_df[i].columns)
+                # ):
+                #     for cell in row:
+                #         cell.style = table_style
+
+                # Save the Excel file
+                #writer.save()
+
+
+
+
+
+
+
+                ## I NEED TO MAKE STYLE CHANGES AFTER I SAVED IT
+                ## THE SCRIPT BELOW I GOT FROM CHAT GPT
+
+                # pandas.ExcelWriter in the 'openpyxl' engine doesn't provide direct access to named styles to update or modify them.
+                # To update styles using pandas.ExcelWriter, you'll typically need to rely on the native Excel styling capabilities 
+                # available through openpyxl or by manually modifying the Excel file after it has been generated by pandas.
+
+                # Here's an example of how to update styles after writing an Excel file using pandas.ExcelWriter:
+
+                # import pandas as pd
+                # from openpyxl import load_workbook
+                # from openpyxl.styles import Font, PatternFill, Border, Side, Alignment
+
+                # # Create a sample DataFrame
+                # data = {'Column1': [1, 2, 3], 'Column2': ['A', 'B', 'C']}
+                # df = pd.DataFrame(data)
+
+                # # Create an ExcelWriter object using openpyxl engine
+                # with pd.ExcelWriter('styled_table.xlsx', engine='openpyxl', mode='w') as writer:
+                #     df.to_excel(writer, sheet_name='Sheet1', index=False)
+
+                # # Load the generated Excel file
+                # workbook = load_workbook('styled_table.xlsx')
+
+                # # Access a specific sheet within the workbook (replace 'Sheet1' with your sheet name)
+                # sheet = workbook['Sheet1']
+
+                # # Access the specific worksheet
+                # worksheet = sheet
+
+                # # Define a Font object for font formatting
+                # font = Font(
+                #     bold=True,
+                #     name='Arial',  # Specify the font name (e.g., Arial)
+                #     size=12,       # Specify the font size
+                # )
+
+                # # Apply the font formatting to a range of cells (e.g., A2:B4)
+                # for row in worksheet.iter_rows(
+                #     min_row=2,
+                #     max_row=4,
+                #     min_col=1,
+                #     max_col=2
+                # ):
+                #     for cell in row:
+                #         cell.font = font
+
+                # # Define other styles (fill color, borders, alignment, etc.) and apply them as needed
+
+                # # Save the modified workbook
+                # workbook.save('styled_table_updated.xlsx')
+
+
+
+
+
 
 
     # CSV - Store dataframe(s) in separate CSV files.
