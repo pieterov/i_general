@@ -979,7 +979,7 @@ def f_get_latest_file(
 
 def f_read_data_from_file(
 
-    c_name,
+    l_name,
     c_path,
     c_type               = 'xlsx',
     c_sheet              = None,
@@ -997,8 +997,8 @@ def f_read_data_from_file(
 
     Parameters
     ----------   
-    c_name: 'str'
-        Name of the file where data is to be read from.
+    l_name: 'str'
+        List of (parts of) of file names where data is to be read from.
     c_path: 'str'
         Path where file resides.
     c_type: 'str'
@@ -1037,22 +1037,15 @@ def f_read_data_from_file(
     b_strip_spaces       = True
 
 
-    c_name  = "HTRI"
-    c_path  = C_PATH_DELIVERABLES
+    l_name  = ["Classification GIs - " + x for x in l_comp_list]
+    c_path  = C_PATH_DATA
+    
+
+    l_name  = 'Content Database'
+    c_path  = C_PATH_DATA
     c_type  = 'xlsx'
-    c_type  = 'csv'
-    c_type  = 'parquet'
-    c_sheet = None
-    c_sheet = 'DATA1'
+    c_sheet = 'gedragsindicatoren'
 
-    df_nline_w_result_all = f_read_data_from_file(
-
-        c_name = "Predicted N-lines - Distance 4 - nline_w",
-        c_type = "parquet",
-        c_path = C_PATH_DATA
-    )
-
-    f_read_data_to_file(c_name, c_path, c_type, l_name)
     """ 
 
 
@@ -1063,8 +1056,21 @@ def f_read_data_from_file(
     # Valid file types.
     l_type_valid = ['xlsx', 'xlsm', 'csv', 'parquet']
 
-    # Latest file.
-    ps_file = f_get_latest_file(c_name, c_path, c_type)
+    # Convert l_name to list - with string as single element - in case it is a string.
+    if isinstance(l_name, str):
+        l_name = [l_name]
+
+    # Latest file per file name. c_name='Content Database'
+    l_file = [
+
+        f_get_latest_file(c_name, c_path, c_type)
+
+        for c_name in l_name
+    ]
+
+    # Create empty list
+    l_df_data = []
+
 
 #----------------------------------------------------------------------------------------------------------------------
 # Error check.
@@ -1078,42 +1084,103 @@ def f_read_data_from_file(
 # Main.
 #----------------------------------------------------------------------------------------------------------------------
 
-    # Excel
-    if c_type in ['xlsx', 'xlsm']:
+    # Iterate through all file names.
+    for i in range(len(l_name)): # i=0
 
-        df_data = pd.read_excel(
+        # Excel
+        if c_type in ['xlsx', 'xlsm']:            
+                
+            obj = pd.read_excel(
 
-            io         = os.path.join(c_path, ps_file.file),
-            sheet_name = c_sheet,
-            usecols    = l_usecols,
-            skiprows   = n_skiprows,
-            nrows      = n_rows,
-            header     = n_header,
-            engine     = 'openpyxl'
-        )
+                io         = os.path.join(c_path, l_file[i].file),
+                sheet_name = c_sheet,
+                usecols    = l_usecols,
+                skiprows   = n_skiprows,
+                nrows      = n_rows,
+                header     = n_header,
+                engine     = 'openpyxl'
+            )
 
-    # CSV
-    if c_type == 'csv':
+            # If we don't supply a sheet name the output is a dictionary of data frames,
+            # from which we will take the first worksheet.
+            if isinstance(obj, dict):
+                    
+                c_sheet_temp = list(obj.keys())[0]
+                
+                df_temp = obj[c_sheet_temp]
 
-        df_data = pd.read_csv(
+            # When sheet name does exist the output is a data frame.
+            else:
 
-            filepath_or_buffer = os.path.join(c_path, ps_file.file),
-            sep                = c_sep,
-            usecols            = l_usecols,
-            skiprows           = n_skiprows,
-            header             = n_header
-        )
+                c_sheet_temp = None
 
-    # Parquet
-    if c_type == 'parquet':
+                df_temp = obj
 
-        df_data = pd.read_parquet(
 
-            path    = os.path.join(c_path, ps_file.file),
-            engine  = 'pyarrow',
-            columns = l_usecols
-        )
+            # Append data frame to list of data frames.
+            l_df_data.append(df_temp)
 
+
+        # CSV
+        if c_type == 'csv':
+
+            l_df_data.append(
+                
+                pd.read_csv(
+
+                    filepath_or_buffer = os.path.join(c_path, l_file[i].file),
+                    sep                = c_sep,
+                    usecols            = l_usecols,
+                    skiprows           = n_skiprows,
+                    header             = n_header
+                )
+            )
+
+
+        # Parquet
+        if c_type == 'parquet':
+
+                l_df_data.append(
+
+                    pd.read_parquet(
+
+                        path    = os.path.join(c_path, l_file[i].file),
+                        engine  = 'pyarrow',
+                        columns = l_usecols
+                    )
+                )
+
+       
+
+        # Comms to the user.
+        print(f"\nReading at : {datetime.now()}")
+
+        print(f"Requested  : '{l_name[i]}' (file), '{c_type}' (type)")
+
+        print(f"Read file  : '{l_file[i].file}'")
+
+        if c_type in ['xlsx', 'xlsm']:
+            
+            if c_sheet is not None:
+                
+                print(f"Sheet name : '{c_sheet}' - provided by you.")
+
+            else:
+
+                print(f"Sheet name : '{c_sheet_temp}' - first sheet in the workbook.")
+
+
+        print(f"Path       : '.../{re.sub(f_who_am_i()[1], '', c_path)}'")
+
+        print(f"Modified   : {l_file[i].date_mod}")
+
+        print(f"Age        : {l_file[i].age}")
+
+        print(f"==========================")
+
+
+    # Concatenate data frames.
+    df_data = pd.concat(l_df_data)
 
     # Clean up header names?
     if b_clean_header_names:
@@ -1123,25 +1190,6 @@ def f_read_data_from_file(
     # Strip spaces before and after the data in each cell?
     if b_strip_spaces:
         df_data = df_data.applymap(lambda x: x.strip() if isinstance(x, str) else x)
-
-
-    # Comms to the user.
-    print(f"\nReading at : {datetime.now()}")
-
-    print(f"Requested  : '{c_name}' (file), '{c_type}' (type)")
-
-    print(f"Read file  : '{ps_file.file}'")
-
-    if c_type in ['xlsx', 'xlsm'] and c_sheet is not None:
-        print(f"Sheet name : '{c_sheet}'")
-
-    print(f"Path       : '.../{re.sub(f_who_am_i()[1], '', c_path)}'")
-
-    print(f"Modified   : {ps_file.date_mod}")
-
-    print(f"Age        : {ps_file.age}")
-
-    print(f"==========================")
 
 
 #----------------------------------------------------------------------------------------------------------------------
