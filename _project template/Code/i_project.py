@@ -36,9 +36,12 @@ import numpy as np
 warnings.simplefilter(action='ignore', category=UserWarning)
 
 # Add path to 'i_general'.
-sys.path.append(os.path.join(
-    re.search(r'.+/Partners/', os.getcwd()).group(),
-    'IWD/Projects/i-general/')
+sys.path.append(
+    
+    os.path.join(
+        re.search(r'.+/Partners/', os.getcwd()).group(),
+        'IWD/Projects/i-general/'
+    )
 )
 
 
