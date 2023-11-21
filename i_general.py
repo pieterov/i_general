@@ -1730,6 +1730,73 @@ def f_evaluation_results(ps_y_true, ps_y_pred):
 
 #######################################################################################################################
 
+def f_split_sentences(  
+        
+        c_sentence,
+        c_return = 'all' # or 'first' or 'last
+    ): 
+
+    """
+    Function to split sentences. Return 'all', 'first' or 'last' sentence(s).
+
+    Parameters
+    ----------
+    c_sentence  : str
+        Sentence to split.
+    n_return    : str
+        Which sentence to return: 'all', 'first' or 'last'.
+   
+
+    Returns
+    -------
+    x_return  : List of str, or str
+        List of sentences or str.
+    
+
+    Testing
+    -------
+    c_sentence = c_gi_updated
+
+    """
+
+
+    #----------------------------------------------------------------------------------------------------------------------
+    # Main.
+    #----------------------------------------------------------------------------------------------------------------------
+
+    # Split sentences from c_sentence.
+    l_sentence = re.split(r'(?<=[.!?])\s+(?=[A-Z])', c_sentence)
+
+    # Do we return all, first, or last sentence?
+    if c_return == 'first':
+        
+        x_return = l_sentence[0]
+
+    elif c_return == 'last':
+
+        x_return = l_sentence[-1]
+
+    elif c_return == 'all':
+
+        x_return = l_sentence
+
+    else:
+        
+        raise ValueError(
+            
+            f"You did not provide a valid value for 'c_return', namely, '{c_return}'. "
+            "It should be 'all', 'first' or 'last'."
+        )
+
+    #----------------------------------------------------------------------------------------------------------------------
+    # Return
+    #----------------------------------------------------------------------------------------------------------------------
+
+    return x_return if len(x_return) > 1 else x_return[0]
+
+
+#######################################################################################################################
+
 # def f_(
 
 #     ):
