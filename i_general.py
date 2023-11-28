@@ -984,7 +984,7 @@ def f_read_data_from_file(
     c_type               = 'xlsx',
     c_sheet              = None,
     c_sep                = ',',
-    l_usecols            = None,
+    l_cols               = None,
     n_skiprows           = None,
     n_rows               = None,
     n_header             = 0,
@@ -1005,7 +1005,7 @@ def f_read_data_from_file(
         Reference to file type to be read (default: 'xlsx').
     c_sheet: 'str'
         Sheet name in case data is to read from Excel file (default: 'None').
-    l_usecols: 'int',
+    l_cols: 'int',
         If list of int, then indicates list of column numbers to be parsed (0-indexed).
     n_skiprows: 'int'
         Line numbers to skip (0-indexed) or number of lines to skip (int) at the start of the file. 
@@ -1029,7 +1029,7 @@ def f_read_data_from_file(
     c_type               = 'xlsx'
     c_sheet              = None
     c_sep                = ','
-    l_usecols            = None
+    l_cols               = None
     n_skiprows           = None
     n_rows               = None
     n_header             = 0
@@ -1094,7 +1094,7 @@ def f_read_data_from_file(
 
                 io         = os.path.join(c_path, l_file[i].file),
                 sheet_name = c_sheet,
-                usecols    = l_usecols,
+                usecols    = l_cols,
                 skiprows   = n_skiprows,
                 nrows      = n_rows,
                 header     = n_header,
@@ -1130,7 +1130,7 @@ def f_read_data_from_file(
 
                     filepath_or_buffer = os.path.join(c_path, l_file[i].file),
                     sep                = c_sep,
-                    usecols            = l_usecols,
+                    usecols            = l_cols,
                     skiprows           = n_skiprows,
                     header             = n_header
                 )
@@ -1146,7 +1146,7 @@ def f_read_data_from_file(
 
                         path    = os.path.join(c_path, l_file[i].file),
                         engine  = 'pyarrow',
-                        columns = l_usecols
+                        columns = l_cols
                     )
                 )
 
