@@ -438,24 +438,85 @@ def f_var_name(var):
 
 #######################################################################################################################
 
-def f_collapse(l_input):
+def f_join(l_input, c_sep = ',', b_quote = False, c_quote = "'", c_and = None):
 
     """
-    Collapse list of items separated by ','.
+    Join list of items separated by ','.
 
     Parameters
     ----------
-    l_input : list
+    l_input     : list
         List of items to collapse.
+    c_sep:      : str
+        Separator (default: ',').
+    b_quote     : boolean
+        Should items be quoted? (default: False).
+    c_quote     : str
+        The quote to be used, typically '"' or "'".
+    c_and       : str
+        Binding element between (for-)last elements (default: None).
 
     Returns
     -------
     str
-        The collapsed string.
+        The joined string.
+
+    Testing
+    -------
+    l_input  = ['apple', 'banana', 'pear', 5]
+    c_sep    = ','
+    b_quote  = True
+    c_quote  = "'"
+    c_and    = 'and'
+
+    f_join(l_input)
+
     """  
 
-    # Return result.
-    return ', '.join("'" + item + "'" for item in map(str, l_input))
+    ###################################################################################################################
+    # Initialization.
+    ###################################################################################################################
+
+    # Determine length of l_input.
+    n_length = len(l_input)
+
+    # Add quotation if requested.
+    if b_quote:
+
+        l_input = [c_quote + item + c_quote for item in map(str, l_input)]
+
+    # Add space behind c_sep if it is not "\n", e.g., when it is ","".
+    c_sep = c_sep if c_sep == "\n" else c_sep + " "
+
+
+    ###################################################################################################################
+    # Main.
+    ###################################################################################################################
+
+    if c_and is None:
+
+        c_output = c_sep.join(l_input)
+
+    else:
+
+        if n_length == 1:
+        
+            c_output = l_input[0]
+
+        elif n_length == 2:
+
+            c_output = l_input[0] + " " + c_and + " " + l_input[1]
+
+        else:
+
+            c_output = c_sep.join(l_input[:-1]) + c_sep + c_and + " " + l_input[n_length-1]
+
+
+    ###################################################################################################################
+    # Return.
+    ###################################################################################################################
+
+    return c_output
 
 
 #######################################################################################################################
