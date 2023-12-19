@@ -463,6 +463,13 @@ def f_join(l_input, c_sep = ',', b_quote = False, c_quote = "'", c_and = None):
 
     Testing
     -------
+
+    # In alle gevallen:
+    c_sep   = ','
+    b_quote = False
+    c_quote = "'"
+    c_and   = None
+
     l_input  = ['apple', 'banana', 'pear', 5]
     c_sep    = ','
     b_quote  = True
@@ -471,11 +478,19 @@ def f_join(l_input, c_sep = ',', b_quote = False, c_quote = "'", c_and = None):
 
     f_join(l_input)
 
+    l_input = df_non_allowed_score.competentie
+    c_and   = 'en'
+    b_quote = True
+
     """  
 
     ###################################################################################################################
     # Initialization.
     ###################################################################################################################
+
+    # Check whether l_input is a list, if not make it a list.
+    if isinstance(l_input, pd.Series):
+            l_input = list(l_input)
 
     # Determine length of l_input.
     n_length = len(l_input)
