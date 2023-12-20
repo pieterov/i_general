@@ -1056,7 +1056,7 @@ def f_read_data_from_file(
 
     # Strip spaces before and after the data in each cell?
     if b_strip_spaces:
-        df_data = df_data.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+        df_data = df_data.map(lambda x: x.strip() if isinstance(x, str) else x)
 
 
 #----------------------------------------------------------------------------------------------------------------------
