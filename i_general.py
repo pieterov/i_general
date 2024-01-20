@@ -488,6 +488,7 @@ def f_is_numerical(value):
     try:
         float(value)
         return True
+    
     except ValueError:
         return False
         
